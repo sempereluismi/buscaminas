@@ -37,7 +37,6 @@ public class Juego {
             opcion = t.mostrarOpciones();
             coordenadas = t.selecionarCelda();
             seguir = t.modificarCelda(opcion, t.getCelda(coordenadas[0], coordenadas[1]));
-            System.out.println(t.getMinasAdyacentes(t.getCelda(coordenadas[0], coordenadas[1])));
             if (!seguir) {
                 System.out.println("Has perdido");
                 t.abrirTodasMinas();

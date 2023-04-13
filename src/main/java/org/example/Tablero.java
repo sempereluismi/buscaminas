@@ -110,9 +110,19 @@ public class Tablero {
         if (c.getMinada()) {
             return false;
         }
+        if (getMinasAdyacentes(c) != 0) {
+            c.setEstado(Estado.LIBRE);
+            return true;
+        } else {
+            ArrayList<Celda> celdas = new ArrayList<>();
+            celdas = getCeldasAdyacentes(c);
 
-        c.setEstado(Estado.LIBRE);
-        return true;
+            for ( Celda celda : celdas ) {
+                abrirCelda(celda);
+            }
+
+            return true;
+        }
     }
 
     public void abrirTodasMinas() {
@@ -156,13 +166,15 @@ public class Tablero {
     }
 
     private ArrayList<Celda> getCeldasAdyacentes(Celda c) {
-        ArrayList<Celda> celdasAdyacentes = new ArrayList<Celda>();
-        int fi = c.getCoordenadas()[0] - 1;
-        int ci = c.getCoordenadas()[1] - 1;
+        ArrayList<Celda> celdasAdyacentes = new ArrayList<>();
+        int filaInicial = c.getCoordenadas()[0] - 1;
+        int colInicial = c.getCoordenadas()[1] - 1;
+        int filaCentral = c.getCoordenadas()[0];
+        int colCentral = c.getCoordenadas()[1];
 
-        for (int f = fi; f < fi + 3; f++) {
-            for (int col = ci; col < ci + 3; col++) {
-                if( f != fi && col != ci && f < 0 && col < 0 && col > largo && f > largo ) {
+        for (int f = filaInicial; f < filaInicial + 3; f++) {
+            for (int col = colInicial; col < colInicial + 3; col++) {
+                if (f >= 0 && col >= 0 && f < largo && col < largo && !(f == filaCentral && col == colCentral)) {
                     celdasAdyacentes.add(getCelda(f, col));
                 }
             }
@@ -172,13 +184,13 @@ public class Tablero {
     }
 
     public int getMinasAdyacentes(Celda c) {
-        ArrayList<Celda> celdas = new ArrayList<Celda>();
+        ArrayList<Celda> celdas;
         int count = 0;
 
         celdas = getCeldasAdyacentes(c);
 
         for (Celda celda : celdas) {
-            if(celda.getMinada()) {
+            if (celda.getMinada()) {
                 count++;
             }
         }
