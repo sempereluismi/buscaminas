@@ -6,10 +6,14 @@ import java.util.Scanner;
 public class Tablero {
     private int largo, nMinas;
     private Celda[][] celdas;
+    private final int nMaxBanderas;
+    private int nBanderas;
 
     public Tablero(int largo, int nMinas) {
         this.nMinas = nMinas;
         this.largo = largo;
+        this.nMaxBanderas = nMinas;
+        nBanderas = 0;
         celdas = new Celda[largo][largo];
     }
 
@@ -58,6 +62,8 @@ public class Tablero {
                 if (celdas[i][j].getEstado() == Estado.LIBRE) {
                     if (celdas[i][j].getMinada()) {
                         System.out.print("*" + " ");
+                    } else if (getMinasAdyacentes(celdas[i][j]) != 0) {
+                        System.out.print(getMinasAdyacentes(celdas[i][j]) + " ");
                     } else {
                         System.out.print(" " + " ");
                     }
@@ -110,19 +116,24 @@ public class Tablero {
         if (c.getMinada()) {
             return false;
         }
+
         if (getMinasAdyacentes(c) != 0) {
             c.setEstado(Estado.LIBRE);
             return true;
-        } else {
-            ArrayList<Celda> celdas = new ArrayList<>();
-            celdas = getCeldasAdyacentes(c);
+        }
 
-            for ( Celda celda : celdas ) {
-                abrirCelda(celda);
-            }
-
+        if (c.getEstado() == Estado.LIBRE) {
             return true;
         }
+
+        c.setEstado(Estado.LIBRE);
+        ArrayList<Celda> celdas = getCeldasAdyacentes(c);
+
+        for ( Celda celda : celdas ) {
+            abrirCelda(celda);
+        }
+
+        return true;
     }
 
     public void abrirTodasMinas() {
@@ -151,17 +162,29 @@ public class Tablero {
 
     public boolean modificarCelda(int opt, Celda c) {
 
-        if (opt == 1) {
-            return abrirCelda(c);
-        } else if (opt == 2) {
-            c.setEstado(Estado.BANDERA);
-            return true;
-        } else {
-            System.err.println("La opcion es invalida");
-            int menuOpt = mostrarOpciones();
-            modificarCelda(menuOpt, c);
-            return true;
+        switch (opt) {
+            case 1:
+                return abrirCelda(c);
+            case 2:
+                if (c.getEstado() != Estado.BANDERA) {
+                    if (nBanderas >= nMaxBanderas) {
+                        System.out.println("El numero de banderas ya es el máximo");
+                    } else {
+                        c.setEstado(Estado.BANDERA);
+                        nBanderas++;
+                    }
+                    return true;
+                } else {
+                    c.setEstado(Estado.TAPADA);
+                    return true;
+                }
+            default:
+                System.err.println("La opcion es invalida");
+                int menuOpt = mostrarOpciones();
+                modificarCelda(menuOpt, c);
+                return true;
         }
+
 
     }
 
@@ -196,6 +219,21 @@ public class Tablero {
         }
 
         return count;
+    }
+
+    public boolean comprobarBanderas() {
+
+        int count = 0;
+
+        for (int i = 0; i < celdas.length; i++) {
+            for (int j = 0; j < celdas[1].length; j++) {
+                if (celdas[i][j].getMinada() && celdas[i][j].getEstado() == Estado.BANDERA) {
+                    count++;
+                }
+            }
+        }
+
+        return (count == nMaxBanderas);
     }
 
 }

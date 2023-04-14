@@ -28,7 +28,7 @@ public class Juego {
         boolean seguir;
         Tablero t = new Tablero(largo, nMinas);
         t.crearTablero();
-        ArrayList<Celda> celda = new ArrayList<Celda>();
+        ArrayList<Celda> celda = new ArrayList<>();
 
 
         do {
@@ -37,8 +37,23 @@ public class Juego {
             opcion = t.mostrarOpciones();
             coordenadas = t.selecionarCelda();
             seguir = t.modificarCelda(opcion, t.getCelda(coordenadas[0], coordenadas[1]));
+
             if (!seguir) {
                 System.out.println("Has perdido");
+                t.abrirTodasMinas();
+                t.mostrarTablero();
+                break;
+            }
+
+            if (t.comprobarCelasAbertas() ) {
+                System.out.println("Has Ganado");
+                t.abrirTodasMinas();
+                t.mostrarTablero();
+                break;
+            }
+
+            if ( t.comprobarBanderas() ) {
+                System.out.println("Has Ganado");
                 t.abrirTodasMinas();
                 t.mostrarTablero();
                 break;
