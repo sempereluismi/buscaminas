@@ -29,7 +29,7 @@ public class Tablero {
 
     private void insertarMinas() {
         int x, y;
-        for (int i = 0; i <= nMinas; i++) {
+        for (int i = 0; i < nMinas; i++) {
             x = (int) (Math.random() * largo);
             y = (int) (Math.random() * largo);
 
@@ -147,17 +147,17 @@ public class Tablero {
     }
 
     public boolean comprobarCelasAbertas() {
-        int celadsSenMina = (largo * largo) - nMinas;
+        int celdasSinMina = (largo * largo) - nMinas;
         int contCeldasLibres = 0;
         for (int i = 0; i < celdas.length; i++) {
             for (int j = 0; j < celdas[1].length; j++) {
-                if (celdas[i][j].getEstado() == Estado.LIBRE && !celdas[i][j].getMinada()) {
+                if (celdas[i][j].getEstado() == Estado.LIBRE && !(celdas[i][j].getMinada())) {
                     contCeldasLibres++;
                 }
             }
         }
 
-        return (celadsSenMina == contCeldasLibres);
+        return (celdasSinMina == contCeldasLibres);
     }
 
     public boolean modificarCelda(int opt, Celda c) {
@@ -227,12 +227,12 @@ public class Tablero {
 
         for (int i = 0; i < celdas.length; i++) {
             for (int j = 0; j < celdas[1].length; j++) {
-                if (celdas[i][j].getMinada() && celdas[i][j].getEstado() == Estado.BANDERA) {
+                if ( celdas[i][j].getMinada() && celdas[i][j].getEstado() == Estado.BANDERA) {
                     count++;
                 }
             }
         }
-
+        System.out.println(count);
         return (count == nMaxBanderas);
     }
 

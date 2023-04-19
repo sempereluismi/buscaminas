@@ -29,15 +29,13 @@ public class Juego {
         Tablero t = new Tablero(largo, nMinas);
         t.crearTablero();
         ArrayList<Celda> celda = new ArrayList<>();
-
+        t.abrirTodasMinas();
 
         do {
-            t.abrirTodasMinas();
             t.mostrarTablero();
             opcion = t.mostrarOpciones();
             coordenadas = t.selecionarCelda();
             seguir = t.modificarCelda(opcion, t.getCelda(coordenadas[0], coordenadas[1]));
-
             if (!seguir) {
                 System.out.println("Has perdido");
                 t.abrirTodasMinas();
@@ -45,19 +43,13 @@ public class Juego {
                 break;
             }
 
-            if (t.comprobarCelasAbertas() ) {
+            if ( t.comprobarCelasAbertas() || t.comprobarBanderas() ) {
                 System.out.println("Has Ganado");
                 t.abrirTodasMinas();
                 t.mostrarTablero();
                 break;
             }
 
-            if ( t.comprobarBanderas() ) {
-                System.out.println("Has Ganado");
-                t.abrirTodasMinas();
-                t.mostrarTablero();
-                break;
-            }
         } while( true );
     }
 }
