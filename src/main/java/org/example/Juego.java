@@ -29,7 +29,6 @@ public class Juego {
         Tablero t = new Tablero(largo, nMinas);
         t.crearTablero();
         ArrayList<Celda> celda = new ArrayList<>();
-        t.abrirTodasMinas();
 
         do {
             t.mostrarTablero();
